@@ -27,7 +27,7 @@ class Downloader(object):
                 if self.show_status:
                     output = output + "\tStatus: %s" % self.color_code(web.status_code)
                 if self.show_size:
-                    output = output + "\tSize: %s" % len(web.content)
+                    output = output + "\tSize: %s KB" % (len(web.content) / 1024)
 
                 print output
                 sleep(self.wait_time)
