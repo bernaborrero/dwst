@@ -8,6 +8,7 @@ def main(arvg):
     show_status = False
     show_size = False
     wait_time = 5 # seconds to wait between requests
+    tries = -1 # number of requests (-1 corresponds to infinite)
 
     if len(arvg) < 1:
         print_help()
@@ -16,7 +17,7 @@ def main(arvg):
     url = arvg[0]
 
     try:
-        opts, _ = getopt.getopt(arvg[1:], 'hswt:')
+        opts, _ = getopt.getopt(arvg[1:], 'hswt:n:')
     except getopt.GetoptError:
         print_help()
         sys.exit(2)
@@ -35,8 +36,14 @@ def main(arvg):
             except ValueError:
                 print 'Wait time must be an integer or a float'
                 sys.exit(2)
+        elif opt == '-n':
+            try:
+                tries = int(arg)
+            except ValueError:
+                print 'Number of tries must be an integer'
+                sys.exit(2)
 
-    dwit = Downloader(url, show_status, show_size, wait_time)
+    dwit = Downloader(url, show_status, show_size, wait_time, tries)
     dwit.start()
 
 def print_help():
@@ -45,6 +52,7 @@ def print_help():
     print "-s:\tShow response status (Default: False)"
     print "-w:\tShow response size (Default: False)"
     print "-t <x>:\tMake request every x seconds (Default: 5 seconds)"
+    print "-n <n>:\tMake n number of requests (Default: no limit)"
     print "-h:\tShow this help"
 
 if __name__ == '__main__':

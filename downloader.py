@@ -9,32 +9,41 @@ import requests
 class Downloader(object):
     headers = {'user-agent': 'dwst/1'}
 
-    def __init__(self, url, show_status=False, show_size=False, wait_time=5):
+    def __init__(self, url, show_status=False, show_size=False, wait_time=5, tries=-1):
         self.url = url
         self.show_status = show_status
         self.show_size = show_size
         self.wait_time = wait_time
+        self.tries = tries
         init(autoreset=True)    # init colorama
 
     def start(self):
+        current_tries = 0
+        downloader_init_time = time()
         try:
-            while True:
+            while self.tries < 0 or current_tries < self.tries:
+                if current_tries > 0:
+                    sleep(self.wait_time)
+
                 init_time = time()
                 web = requests.get(self.url, headers=self.headers)
                 download_time = time() - init_time
-
-                output = "%s downloaded in %s" % (self.url, download_time)
-                if self.show_status:
-                    output = output + "\tStatus: %s" % self.color_code(web.status_code)
-                if self.show_size:
-                    output = output + "\tSize: %s KB" % (len(web.content) / 1024)
-
-                print output
-                sleep(self.wait_time)
+                
+                print self.format_output(download_time, web.status_code, len(web.content))
+                current_tries = current_tries + 1
+            self.end(current_tries, downloader_init_time)
         except KeyboardInterrupt:
-            sys.exit()
+            self.end(current_tries, downloader_init_time)
         except:
             raise
+
+    def format_output(self, download_time, status_code, content_length):
+        output = "%s downloaded in %s sec" % (self.url, download_time)
+        if self.show_status:
+            output = output + "\tStatus: %s" % self.color_code(status_code)
+        if self.show_size:
+            output = output + "\tSize: %s KB" % (content_length / 1024)
+        return output
 
     def color_code(self, status_code):
         code_type = int(str(status_code)[:1])
@@ -55,3 +64,10 @@ class Downloader(object):
             return colored(status_code, color)
         else:
             return status_code
+    
+    def print_summary(self, current_tries, elapsed_time):
+        print "Done. %s tries in %s seconds." % (current_tries, elapsed_time)
+
+    def end(self, current_tries, downloader_init_time):
+        self.print_summary(current_tries, time() - downloader_init_time)
+        sys.exit()
