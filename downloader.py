@@ -2,6 +2,8 @@
 
 from time import sleep, time
 import sys
+from colorama import init
+from termcolor import colored
 import requests
 
 class Downloader(object):
@@ -12,6 +14,7 @@ class Downloader(object):
         self.show_status = show_status
         self.show_size = show_size
         self.wait_time = wait_time
+        init(autoreset=True)    # init colorama
 
     def start(self):
         try:
@@ -22,7 +25,7 @@ class Downloader(object):
 
                 output = "%s downloaded in %s" % (self.url, download_time)
                 if self.show_status:
-                    output = output + "\tStatus: %s" % web.status_code
+                    output = output + "\tStatus: %s" % self.color_code(web.status_code)
                 if self.show_size:
                     output = output + "\tSize: %s" % len(web.content)
 
@@ -32,3 +35,23 @@ class Downloader(object):
             sys.exit()
         except:
             raise
+
+    def color_code(self, status_code):
+        code_type = int(str(status_code)[:1])
+        color = False
+
+        if code_type == 1:
+            color = 'blue'
+        elif code_type == 2:
+            color = 'green'
+        elif code_type == 3:
+            color = 'yellow'
+        elif code_type == 4:
+            color = 'red'
+        elif code_type == 5:
+            color = 'magenta'
+
+        if color:
+            return colored(status_code, color)
+        else:
+            return status_code
