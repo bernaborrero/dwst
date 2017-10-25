@@ -9,12 +9,13 @@ import requests
 class Downloader(object):
     headers = {'user-agent': 'dwst/1'}
 
-    def __init__(self, url, show_status=False, show_size=False, wait_time=5, tries=-1):
+    def __init__(self, url, show_status=False, show_size=False, wait_time=5, tries=-1, timeout=10):
         self.url = url
         self.show_status = show_status
         self.show_size = show_size
         self.wait_time = wait_time
         self.tries = tries
+        self.timeout = timeout
         init(autoreset=True)    # init colorama
 
     def start(self):
@@ -26,10 +27,17 @@ class Downloader(object):
                     sleep(self.wait_time)
 
                 init_time = time()
-                web = requests.get(self.url, headers=self.headers)
-                download_time = time() - init_time
-                
-                print self.format_output(download_time, web.status_code, len(web.content))
+                try:
+                    web = requests.get(self.url, headers=self.headers, timeout=self.timeout)
+                    download_time = time() - init_time
+                    print self.format_output(download_time, web.status_code, len(web.content))
+                except requests.exceptions.Timeout:
+                    print "%s timed out" % self.url
+                except requests.exceptions.TooManyRedirects:
+                    print "%s exceeded the max number of redirects allowed" % self.url
+                except requests.exceptions.ConnectionError:
+                    print "%s connection failed" % self.url
+
                 current_tries = current_tries + 1
             self.end(current_tries, downloader_init_time)
         except KeyboardInterrupt:
