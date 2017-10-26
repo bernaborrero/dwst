@@ -9,14 +9,14 @@ import requests
 class Downloader(object):
     headers = {'user-agent': 'dwst/1'}
 
-    def __init__(self, url, show_status=False, show_size=False, show_redirections=False, wait_time=5, tries=-1, timeout=10):
+    def __init__(self, url, options):
         self.url = url
-        self.show_status = show_status
-        self.show_size = show_size
-        self.show_redirections = show_redirections
-        self.wait_time = wait_time
-        self.tries = tries
-        self.timeout = timeout
+        self.show_status = options['show_status'] or False
+        self.show_size = options['show_size'] or False
+        self.show_redirections = options['show_redirections'] or False
+        self.wait_time = options['wait_time'] or 5
+        self.tries = options['tries'] or -1
+        self.timeout = options['timeout'] or 10
         init(autoreset=True)    # init colorama
 
     def start(self):

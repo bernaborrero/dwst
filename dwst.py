@@ -53,7 +53,16 @@ def main(arvg):
                 print 'Timeout time must be an integer or a float'
                 sys.exit(2)
 
-    dwit = Downloader(url, show_status, show_size, show_redirections, wait_time, tries, timeout)
+    options = {
+        'show_status': show_status,
+        'show_size': show_size,
+        'show_redirections': show_redirections,
+        'wait_time': wait_time,
+        'tries': tries,
+        'timeout': timeout
+    }
+
+    dwit = Downloader(url, options)
     dwit.start()
 
 def print_help():
