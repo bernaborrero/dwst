@@ -38,19 +38,19 @@ def main(arvg):
             try:
                 wait_time = float(arg)
             except ValueError:
-                print 'Wait time must be an integer or a float'
+                print('Wait time must be an integer or a float')
                 sys.exit(2)
         elif opt == '-n':
             try:
                 tries = int(arg)
             except ValueError:
-                print 'Number of tries must be an integer'
+                print('Number of tries must be an integer')
                 sys.exit(2)
         elif opt == '-l':
             try:
                 timeout = float(arg)
             except ValueError:
-                print 'Timeout time must be an integer or a float'
+                print('Timeout time must be an integer or a float')
                 sys.exit(2)
 
     options = {
@@ -66,15 +66,15 @@ def main(arvg):
     dwit.start()
 
 def print_help():
-    print "Dwst usage: python dwst.py url <options>\n"
-    print "Options:"
-    print "-s:\tShow response status (Default: False)"
-    print "-w:\tShow response size (Default: False)"
-    print "-r:\tShow redirections (Default: False)"
-    print "-t <x>:\tMake request every <x> seconds (Default: 5 seconds)"
-    print "-n <n>:\tMake <n> number of requests (Default: no limit)"
-    print "-l <l>:\tTimeout request after <l> seconds"
-    print "-h:\tShow this help"
+    print("Dwst usage: python dwst.py url <options>\n")
+    print("Options:")
+    print("-s:\tShow response status (Default: False)")
+    print("-w:\tShow response size (Default: False)")
+    print("-r:\tShow redirections (Default: False)")
+    print("-t <x>:\tMake request every <x> seconds (Default: 5 seconds)")
+    print("-n <n>:\tMake <n> number of requests (Default: no limit)")
+    print("-l <l>:\tTimeout request after <l> seconds")
+    print("-h:\tShow this help")
 
 if __name__ == '__main__':
     main(sys.argv[1:])

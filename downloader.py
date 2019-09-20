@@ -31,13 +31,13 @@ class Downloader(object):
                 try:
                     web = requests.get(self.url, headers=self.headers, timeout=self.timeout)
                     download_time = time() - init_time
-                    print self.format_output(download_time, web.status_code, len(web.content), web.history)
+                    print(self.format_output(download_time, web.status_code, len(web.content), web.history))
                 except requests.exceptions.Timeout:
-                    print "%s timed out" % self.url
+                    print("%s timed out" % self.url)
                 except requests.exceptions.TooManyRedirects:
-                    print "%s exceeded the max number of redirects allowed" % self.url
+                    print("%s exceeded the max number of redirects allowed" % self.url)
                 except requests.exceptions.ConnectionError:
-                    print "%s connection failed" % self.url
+                    print("%s connection failed" % self.url)
 
                 current_tries = current_tries + 1
             self.end(current_tries, downloader_init_time)
@@ -81,7 +81,7 @@ class Downloader(object):
             return status_code
     
     def print_summary(self, current_tries, elapsed_time):
-        print "Done. %s tries in %s seconds." % (current_tries, elapsed_time)
+        print("Done. %s tries in %s seconds." % (current_tries, elapsed_time))
 
     def end(self, current_tries, downloader_init_time):
         self.print_summary(current_tries, time() - downloader_init_time)
